@@ -12,8 +12,15 @@
 </div>
 <div>SGF is <a href="https://www.red-bean.com/sgf/">"Smart Game Format"</a>, which is a plain text format. SGF is easily portable, and can be read by humans.
 </div>
-<div> Usage: Place the library in the &lthead> section of your web page. There are 3 'classes' and some utilities:
+<div>All SGF properties will be read; the following properties are understood:<br />
+&nbsp Root node: FF ( must be FF[4] ), GM ( must be GM[11] ), SZ, PL, AB, AW, C, IP<br />
+&nbsp Other nodes: B, W, IP, C.<br />
+&nbsp B[swap-pieces] and W[swap-pieces] set the .swap property of the move to true. <br />
+&nbsp All these properties, and aditionally the AP property,  will by written where appropriate in the SGF output
 </div>
+<div> Usage: Place the library in the &lthead> section of your web page. There are 3 'classes' and some utilities.<br />
+&nbsp See the files test1.html, test2.html etc for examples.
+</div>  
 <br />
 <h2>Game</h2>
 <div>
@@ -157,6 +164,10 @@ Game.currentMove should have been set to the last move actually played, which de
 </div>
 <h4>.row</h4>
 <div>The (integer) row number of the cell, starting at 1.
+</div>
+<h4>.swap</h4>
+<div>This is set to true</b> if the move represents a swap of the pieces ([swap-pieces] in SGF). Otherwise this property is absent.
+Code: <i>if (move.swap) {...}</i> can be used to determine if the move is a swap.
 </div>
 
 <h3>Methods</h3>
