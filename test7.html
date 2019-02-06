@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="docs.css">
+<script src="ksgf.js"></script>
+<script>
+function test7() {
+	var inputText = document.getElementById("input").innerHTML;
+
+	KSGF.setAppName("My Text Reading App");
+	var game = new KSGF.Game();
+	var boardsize = 13
+	game.rows = boardsize;
+	game.cols = boardsize;
+	
+	var items = inputText.split(/[,.;:\s+]/); // list of separators ,.;: and whitespace
+	for (var i=0; i<items.length; i++) {
+		var val = items[i];
+		if ( (val.length == 2 || val.length == 3) ) {
+			var c = parseInt(val.charCodeAt(0) - "a".charCodeAt(0) + 1); // eg b
+			var r = parseInt(val.slice(1, val.length)); // eg 6, 12
+			if (Number.isInteger(r) && Number.isInteger(c) && r > 0 && r <= boardsize && c > 0 && c <= boardsize) 
+				game.makeMove(r,c);
+		}
+	}
+
+	// show the SGF text
+	var text = game.encode();
+
+	var preElement = document.getElementById("output");
+	preElement.innerHTML = text;	
+}
+</script>
+<title>KSGF</title>
+</head>
+
+<body onload="test7()">
+<h1>KSGF test 7</h1>
+<p>Set up a game, and give it a board size of 13. Read text containing some moves like a1, b2 from the top 'input' box, and form a game.
+Display a SGF representation of the game in the bottom 'output' box.
+<p>Input:</p>
+<pre id="input">
+This paragraph is ignored, as there are no recognised moves.
+
+1. a1  b2
+2. d4;  e5
+The moves given above are decoded.
+
+The move a99 is ignored as it is off the board.
+</pre>
+
+<p>The output is:</p>
+<pre id="output">
+
+</pre>
+</body>
+</html>

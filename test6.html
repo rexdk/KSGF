@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="docs.css">
+<script src="ksgf.js"></script>
+<script>
+function test6() {
+	var inputText = document.getElementById("input").innerHTML;
+
+	KSGF.setAppName("My Test Prog");
+	var game = new KSGF.Game();
+	var success = game.decode(inputText);
+	if (!success) {
+		alert("read failed, error: " + game.errorCode + " : " + game.getErrorMessage());
+		return;
+	}
+	var cellContents = [];
+	for (var i = 0; i<=game.rows; i++) {
+		cellContents[i] = [];
+		for (var j = 0; j<=game.cols; j++) {
+			cellContents[i].push(KSGF.EMPTY);
+		}
+	}
+	
+	// place the initially added stones
+	for (var i = 0; i<game.addedBlackStones.length; i++)
+		cellContents[game.addedBlackStones[i].row][game.addedBlackStones[i].col] = KSGF.BLACK;
+	for (var i = 0; i<game.addedWhiteStones.length; i++)
+		cellContents[game.addedWhiteStones[i].row][game.addedWhiteStones[i].col] = KSGF.WHITE;
+	
+	// place the stones played in the game
+	var move = game.currentMove;
+	var turn = game.currentTurn;
+	while ( !move.isRoot() ) { 
+		turn = 	(turn == KSGF.BLACK) ? KSGF.WHITE : KSGF.BLACK;
+		cellContents[move.row][move.col] = turn;  //KSGF.BLACK or KSGF.WHITE
+		move = move.previousMove;
+	} 	
+
+	// display the board
+	var text = "";
+	var indentX = 0;
+	var indentY = 0;
+	for (var i = 1; i<=game.rows; i++) { 
+		for (var j = 1; j<=game.cols; j++) {
+			var cellColour = "#EECC44";
+			if (cellContents[i][j] == KSGF.BLACK) cellColour = "#000000";
+			else if (cellContents[i][j] == KSGF.WHITE) cellColour = "#FFFFFF";
+			text += '<svg width="40" height="40" style="position: absolute; left: ' + indentX + 'px; top: ' + indentY + 'px;">';
+			text += '<polygon points="18,0 36,10 36,30 18,40 0,30 0,10" fill="' + cellColour + '"></polygon></svg>';
+			indentX += 40;
+		}
+		indentY += 34;
+		indentX = indentY * 20/34;		
+	}
+	document.getElementById("board").innerHTML = text;
+
+	// show the SGF text
+	var text1 = game.encode();
+
+	var preElement = document.getElementById("output");
+	preElement.innerHTML = text1;	
+}
+</script>
+<title>KSGF</title>
+</head>
+
+<body style="background-color: grey;" onload="test6()">
+<h1>KSGF test 6</h1>
+<p>Read an SGF game with unequal sides, a comment and initially added stones from the text in the top 'input' box.
+Show the game on a board (note that no IP[] was given, so a default was used.)
+Display a reformatted SGF representation of the game in the bottom 'output' box.
+<p>Input:</p>
+<pre id="input">
+(;AP[Some Hex App]SZ[7:4]FF[4]GM[11]
+AB[f1][f2][f3][f4]AW[g1][g2][g3][g4]
+;B[c3] ;W[b4]C[a comment with \[brackets\]!] (; B[a1]) (;B[a2] ;W[a3])
+)
+
+</pre>
+<p>The Hex board:</p>
+<div style = " position: relative; width: 400px;  height: 400px;">
+ <div id="board"></div>
+</div>
+<p>The output is:</p>
+<pre id="output">
+
+</pre>
+</body>
+</html>

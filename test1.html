@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="docs.css">
+<script src="ksgf.js"></script>
+<script>
+function test1() {
+	var game = new KSGF.Game();
+	game.makeMove(2,2);
+	game.makeMove(5,5);
+	game.makeMove(6,6);
+
+	var text = game.encode();
+
+	var preElement = document.getElementById("output");
+	preElement.innerHTML = text;
+}
+</script>
+<title>KSGF</title>
+</head>
+
+<body  onload="test1()">
+<h1>KSGF test 1</h1>
+<p>Set up a game; make some moves; display the SGF representation of the game created.</p>
+<p>The output is:</p>
+<pre id="output">
+
+</pre>
+
+
+
+
+
+</body>
+</html>

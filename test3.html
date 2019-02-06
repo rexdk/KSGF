@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="docs.css">
+<script src="ksgf.js"></script>
+<script>
+function test3() {
+	KSGF.setAppName("My Test Prog");
+	var game = new KSGF.Game();
+	game.makeMove("a3");
+	game.makeMove("b7");
+	var m = game.currentMove;
+	game.makeMove("c9");	
+	game.makeMove("d4");
+
+	text = "The saved move was - row: " + m.row + " col: " + m.col + ", that is: " + KSGF.getCellIDText(m);
+	m = game.currentMove;
+	text += "\nThe last move was - row: " + m.row + " col: " + m.col + ", that is: " + KSGF.getCellIDText(m);
+	
+	var preElement = document.getElementById("output");
+	preElement.innerHTML = text;
+	
+	
+}
+</script>
+<title>KSGF</title>
+</head>
+
+<body  onload="test3()">
+<h1>KSGF test 3</h1>
+<p>Set up a game, make some moves, and report on two specific moves
+</p>
+<p>The output is:</p>
+<pre id="output">
+
+</pre>
+
+
+
+
+
+</body>
+</html>

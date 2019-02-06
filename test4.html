@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="docs.css">
+<script src="ksgf.js"></script>
+<script>
+function test4() {
+	KSGF.setAppName("My Test Prog");
+	var game = new KSGF.Game();
+	var boardsize = 9;
+	game.rows = boardsize;
+	game.cols = boardsize;
+	game.makeMove("a3");
+	game.makeMove("b5");
+	game.makeMove("c6");	
+	game.makeMove("d4");
+	game.makeMove("g7");
+	
+	var cellContents = [];
+	for ( var i = 0; i<=boardsize; i++ ) {
+		cellContents[i] = [];
+		for ( var j = 0; j<=boardsize; j++ ) {
+			cellContents[i].push(KSGF.EMPTY);
+		}
+	}
+	var move = game.currentMove;
+	var turn = game.currentTurn;
+	while ( !move.isRoot() ) { 
+		turn = 	(turn == KSGF.BLACK) ? KSGF.WHITE : KSGF.BLACK;
+		cellContents[move.row][move.col] = turn;  //KSGF.BLACK or KSGF.WHITE
+		move = move.previousMove;
+	} 	
+
+	var text = "";
+	var indentX = 0;
+	var indentY = 0;
+	for ( var i = 1; i<=boardsize; i++ ) { 
+		for ( var j = 1; j<=boardsize; j++ ) {
+			var cellColour = "#EECC44";
+			if (cellContents[i][j] == KSGF.BLACK) cellColour = "#000000";
+			else if (cellContents[i][j] == KSGF.WHITE) cellColour = "#FFFFFF";
+			text += '<svg width="40" height="40" style="position: absolute; left: ' + indentX + 'px; top: ' + indentY + 'px;">';
+			text += '<polygon points="18,0 36,10 36,30 18,40 0,30 0,10" fill="' + cellColour + '"></polygon></svg>';
+			indentX += 40;
+		}
+		indentY += 34;
+		indentX = indentY * 20/34;		
+	}
+
+	document.getElementById("board").innerHTML = text;	
+}
+</script>
+<title>KSGF</title>
+</head>
+
+<body style="background-color: grey;" onload="test4()">
+<h1>KSGF test 4</h1>
+<p>Set up a game; make some moves.
+Display a game board for the game played so far.</p>
+<p>The Hex board:</p>
+<div style = " position: relative; width: 400px;  height: 400px;">
+ <div id="board"></div>
+</div>
+</body>
+</html>

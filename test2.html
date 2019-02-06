@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="docs.css">
+<script src="ksgf.js"></script>
+<script>
+function test2() {
+	KSGF.setAppName("My Test Prog");
+	var game = new KSGF.Game();
+	game.addedBlackStones.push(new KSGF.Cell(3,6));
+	game.addedBlackStones.push(new KSGF.Cell(3,7));
+	game.addedWhiteStones.push(new KSGF.Cell(3,8));
+	game.addWhiteStone(3, 9);
+	game.makeMove(2,2);
+	game.makeMove({row: 3, col: 3});
+	game.makeMove("d4");
+	game.currentMove.comment = "Say something!";
+	game.makeMove(5,5);
+	game.erase();
+	game.makeMove(6,6);
+	game.makeMove(3,7); // this move will not be played as the cell is occupied
+	game.makeMove(2,2); // this move will not be played as the cell was played before
+	game.makeMove(1,5);
+	game.goBack();
+	var c = new KSGF.Cell(7,7);
+	game.makeMove(c);
+	game.makeMove(10,10);
+	
+	var text = game.encode();
+
+	var preElement = document.getElementById("output");
+	preElement.innerHTML = text;
+	
+	
+}
+</script>
+<title>KSGF</title>
+</head>
+
+<body  onload="test2()">
+<h1>KSGF test 2</h1>
+<p>Set up a game; add some set-up stones; make some moves (specified in different ways); demonstrate 'erase a move' and 'go back a move'; add a comment; make illegal moves which are not played. Display the SGF representation of the game created.</p>
+<p>The output is:</p>
+<pre id="output">
+
+</pre>
+
+
+
+
+
+</body>
+</html>

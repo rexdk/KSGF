@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="docs.css">
+<title>KSGF</title>
+</head>
+
+<body>
+<h1>KSGF</h1>
+<div><b>KSGF</b> is a javascript library to represent a Hex game, and to read and write the game in SGF format.
+</div>
+<div>SGF is <a href="https://www.red-bean.com/sgf/">"Smart Game Format"</a>, which is a plain text format. SGF is easily portable, and can be read by humans.
+</div>
+<div> Usage: Place the library in the &lthead> section of your web page. There are 3 'classes' and some utilities:
+</div>
+<br />
+<h2>Game</h2>
+<div>
+The Game class represents a Hex Game.
+</div>
+<h3>Constructor</h3>
+<h4>Game()</h4>
+<div>The game has these initial values: rows = cols = 11; first player = KSGF.BLACK;
+</div>
+
+<h3>Properties</h3>
+<h4>.addedBlackStones</h4>
+<div>This is an array of Cells (see the Cell class below) occupied by black stones which have been added to the board before play begins.
+This will not happen in a real game, but may be helpful eg when exploring a template.
+</div>
+<h4>.addedWhiteStones</h4>
+<div>See .addedBlackStones.
+This is an array of Cells (see the Cell class below) occupied by added white stones.
+</div>
+<h4>.cols</h4>
+<div>The number of columns for this game's board.
+</div>
+<h4>.currentMove</h4>
+<div>The last move that was made in the actual game. Other moves may have been explored.
+</div>
+<h4>.currentTurn</h4>
+<div>Whose turn it is to play next in the actual game (KSGF.BLACK or KSGF.WHITE)
+</div>
+<h4>.errorCode</h4>
+<div>Identifier for the last error encountered when reading a game; see .getErrorMessage() too.
+</div>
+<h4>.firstPlayer</h4>
+<div>KSGF.BLACK (the default) or KSGF.WHITE, to indicate which player plays first.
+</div>
+<h4>.rootMove</h4>
+<div>The root of the game tree. rootMove is a Move (see the Move class below), which has a list of first moves, played or explored (.nextMoves[]).
+Those next Moves also have possible nextMoves[] and so on, so the moves in the game are represented by a game tree.
+</div>
+<h4>.rows</h4>
+<div>The number of rows for this game's board.
+</div>
+
+<h3>Methods</h3>
+<h4>.addBlackStone(cell)</h4>
+<h4>.addBlackStone(row, col)</h4>
+<h4>.addBlackStone(cellIDText)</h4>
+<div>Checks the proposed cell is available, then adds a black stone there in the set-up position.
+Returns <b>true</b> for success and <b>false</b> otherwise.<br />
+cell is an instance of the Cell or Move class, see below, or eg {row: 4, col: 5}.<br />
+row, col are integer values for the row and column of the move<br />
+cellIDText is a text representation of the cell, eg "a5", "g11" etc. where columns are given a single letter  a,b,c...
+</div>
+<h4>.addWhiteStone(cell)</h4>
+<h4>.addWhiteStone(row, col)</h4>
+<h4>.addWhiteStone(cellIDText)</h4>
+<div>Checks the proposed cell is available, then adds a white stone there in the set-up position.
+Returns <b>true</b> for success and <b>false</b> otherwise.<br />
+cell is an instance of the Cell or Move class, see below, or eg {row: 4, col: 5}.<br />
+row, col are integer values for the row and column of the move<br />
+cellIDText is a text representation of the cell, eg "a5", "g11" etc. where columns are given a single letter  a,b,c...
+</div>
+<h4>.changeTurn()</h4>
+<div>Changes .currentTurn from KSGF.BLACK to KSGF.WHITE or vice versa.
+</div>
+<h4>.decode(text)</h4>
+<div>Decodes the text, given in Smart Game Format (SGF). If successful, sets the game from the data and returns <b>true</b>. If unsuccessful, leaves the existing game untouched and returns <b>false</b>; .getErrorMessage() and .errorCode will indicate the problem. If multiple games are given by the text, only the first is decoded.
+</div>
+<h4>.encode()</h4>
+<div>Returns a formatted SGF representation of this game.
+The resulting text is indented so that it is easier for a human to read.
+</div>
+<h4>.erase()</h4>
+<div>Sets the current move to the previous move, if there is one, and erases the old current move and any following branches. (See also .goBack)
+</div>
+<h4>.getErrorMessage()</h4>
+<div>Returns text describing the last error encountered when reading a game; see .errorCode too.
+</div>
+<h4>.goBack()</h4>
+<div>Sets the current move to the previous move, if there is one. The game tree is otherwise unaffected. (See also .erase)
+</div>
+<h4>.isCellEmpty(cell)</h4>
+<h4>.isCellEmpty(row, col)</h4>
+<h4>.isCellEmpty(cellIDText)</h4>
+<div>Returns <b>true</b> if the given cell is empty (and on the board), or otherwise <b>false</b>.<br />
+cell is an instance of the Cell or Move class, see below, or eg {row: 4, col: 5}.<br />
+row, col are integer values for the row and column of the move<br />
+cellIDText is a text representation of the cell, eg "a5", "g11" etc. where columns are given a single letter  a,b,c...
+</div>
+<h4>.isCellOnBoard(cell)</h4>
+<h4>.isCellOnBoard(row, col)</h4>
+<h4>.isCellOnBoard(cellIDText)</h4>
+<div>Returns <b>true</b> if the given cell is on the board, or otherwise <b>false</b>.<br />
+cell is an instance of the Cell or Move class, see below, or eg {row: 4, col: 5}.<br />
+row, col are integer values for the row and column of the move<br />
+cellIDText is a text representation of the cell, eg "a5", "g11" etc. where columns are given a single letter  a,b,c...
+</div>
+<h4>.makeMove(cell)</h4>
+<h4>.makeMove(row, col)</h4>
+<h4>.makeMove(cellIDText)</h4>
+<div>This adds a move to the game tree at the current playing position. Returns <b>true</b>/<b>false</b> for success/failure.<br />
+cell is an instance of the Cell class, see below, or {row: row, col: col}.<br />
+row, col are integer values for the row and column of the move<br />
+cellIDText is a text representation of the cell, eg "a5", "g11" etc. where columns are given a single letter  a,b,c...
+</div>
+<h4>.stripComments(move)</h4>
+<div>Removes any comments from the given Move and any branches above it.
+When move is the rootMove, this therefore strips all comments from the game tree.
+SGF text without comments is more readable.
+</div>
+<br />
+
+<h2>Move</h2>
+<div>The Move class represents a Move on the board, that is the placing of a BLACK or WHITE stone.
+The game is represented as a tree of Moves, starting from a root move with branches for moves that have been played or explored.
+The root move (or root node) contains a list of possible first moves.
+</div>
+<h3>Constructor</h3>
+<h4>Move(cell)</h4>
+<h4>Move(row, col)</h4>
+<h4>Move(cellIDText)</h4>
+<div>
+cell - an instance of the Cell or Move class, or eg {row: 4, col: 5}.<br />
+row - the (integer) row number of the Move's cell, starting at 1.<br />
+col - the (integer) column number of the Move's cell, starting at 1.<br />
+cellIDText - a text representation of the Move's cell, eg "a5", "g11" etc. where columns are given a single letter  a,b,c...
+</div>
+
+<h3>Properties</h3>
+<h4>.comment</h4>
+<div>A comment about this move in plain text format
+</div>
+<h4>.col</h4>
+<div>The (integer) col number of the cell, starting at 1.
+</div>
+<h4>.nextMoves</h4>
+<div>An array of moves that have been played or explored from this position.
+Game.currentMove should have been set to the last move actually played, which determines whether a move has been played and merely explored.
+</div>
+<h4>.previousMove</h4>
+<div>The move that was made before this one. Note that the root Move does not have a previous move, so .previousMove is set to null.
+</div>
+<h4>.row</h4>
+<div>The (integer) row number of the cell, starting at 1.
+</div>
+
+<h3>Methods</h3>
+<h4>.getNextMove()</h4>
+<div>Returns the first given next move, or <b>null</b> if none.
+Might be useful if there are no branches of explored moves, just played moves.
+</div>
+<h4>.getnextMoveOnPath(targetMove)</h4>
+<div>Returns the next move on the path to targetMove, or <b>null</b> if unsuccessful.
+Useful if proceeding towards the current move (ie Game.currentMove).
+</div>
+<h4>.isOnPathTo(targetMove)</h4>
+<div>Returns <b>true</b> if this move is is on the path to targetMove, or <b>false</b> otherwise.
+When targetMove is the current move (ie Game.currentMove), this indicates whether this move has been played (or merely explored)
+</div>
+<h4>.isRoot()</h4>
+<div>Returns <b>true</b> if this is the root move, or <b>false</b> otherwise.
+</div>
+<h4>.nextMovesCount()</h4>
+<div>Returns the number of next moves played or explored
+</div>
+<br />
+
+
+<h2>Cell</h2>
+<div>The Cell class represents a Cell on the board, having a row and a column number.
+</div>
+<h3>Constructor</h3>
+<h4>Cell(cell)</h4>
+<h4>Cell(row, col)</h4>
+<h4>Cell(cellIDText)</h4>
+<div>
+cell - an instance of the Cell or Move class, or eg {row: 4, col: 5}.<br />
+row - the (integer) row number of the cell, starting at 1.<br />
+col - the (integer) column number of the cell, starting at 1.<br />
+cellIDText - a text representation of the cell, eg "a5", "g11" etc. where columns are given a single letter  a,b,c...
+</div>
+
+<h3>Properties</h3>
+<h4>.col</h4>
+<div>The (integer) column number of the cell, starting at 1.
+</div>
+<h4>.row</h4>
+<div>The (integer) row number of the cell, starting at 1.
+</div>
+
+<h3>Methods</h3>
+<div>None.
+</div>
+<br />
+
+<h2>Utilities</h2>
+<h3>Constants</h3>
+<h4>KSGF.EMPTY</h4>
+<h4>KSGF.BLACK</h4>
+<h4>KSGF.WHITE</h4>
+<div>
+These are small integer values, guaranteed to be less than 100, so you could define your own constants starting at 100.
+</div>
+<br />
+<h3>Functions</h3>
+<h4>KSGF.setAppName(name)</h4>
+<div>Sets the name of your app, which is used when writing SGF output. Default is "KSGF library".
+</div>
+<h4>KSGF.getCellIDText(cell)</h4>
+<h4>KSGF.getCellIDText(row, col)</h4>
+<h4>KSGF.getCellIDText(cellIDText)</h4>
+<div>Returns a representation of the row, col as text, where the col is a letter a,b,c... and the row a number; eg "d2".
+It accepts various input formats:
+</div>
+<div>
+cell - an instance of the Cell or Move class, see below, or eg {row: 4, col: 5}.<br />
+row - the (integer) row number of the cell, starting at 1.<br />
+col - the (integer) column number of the cell, starting at 1.<br />
+cellIDText - a text representation of the cell, eg "a5", "g11" etc. where columns are given a single letter  a,b,c...
+</div>
+<br />
+
+</body>
+</html>
